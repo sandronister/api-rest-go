@@ -27,3 +27,28 @@ func GetPeople(w http.ResponseWriter, r *http.Request) {
 	database.DB.First(&person, id)
 	json.NewEncoder(w).Encode(person)
 }
+
+func CreatePerson(w http.ResponseWriter, r *http.Request) {
+	var person models.Person
+	json.NewDecoder(r.Body).Decode(&person)
+	database.DB.Create(&person)
+	json.NewEncoder(w).Encode(person)
+}
+
+func RemovePerson(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	var person models.Person
+	database.DB.Delete(&person, id)
+	json.NewEncoder(w).Encode(person)
+}
+
+func EditPerson(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	var person models.Person
+	database.DB.First(&person, id)
+	json.NewDecoder(r.Body).Decode(&person)
+	database.DB.Save(&person)
+	json.NewEncoder(w).Encode(person)
+}
